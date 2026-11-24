@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Wawancara Uji Pesan — WP Bukan Pegawai</title>
+<style>
+  :root{
+    --ink:#16202c; --muted:#5a6b7d; --line:#d7dee6; --bg:#f4f6f9; --card:#fff;
+    --accent:#1f3864; --accent-soft:#e6ecf5; --warn:#8a4b00; --warn-soft:#fdf3e3;
+    --coder:#5b3a8c; --coder-soft:#f4f0fa; --ok:#14532d; --radius:10px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:15px/1.5 "Segoe UI",system-ui,-apple-system,Arial,sans-serif;}
+  header{position:sticky;top:0;z-index:20;background:var(--accent);color:#fff;
+         padding:10px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  header h1{font-size:16px;margin:0;font-weight:600;flex:1 1 300px}
+  .pill{background:#ffffff22;border:1px solid #ffffff55;border-radius:999px;padding:3px 10px;font-size:12.5px}
+  header button{background:#ffffff18;color:#fff;border-color:#ffffff66}
+  .wrap{max-width:900px;margin:0 auto;padding:16px 16px 140px}
+  .note{background:var(--warn-soft);border:1px solid #f0dcb8;color:var(--warn);
+    border-radius:var(--radius);padding:10px 12px;font-size:13.5px;margin:12px 0}
+  .idbar{background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    padding:10px 14px;font-size:13.5px;display:flex;gap:6px 18px;flex-wrap:wrap}
+  .idbar b{font-family:Consolas,monospace;font-size:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+        padding:16px 18px;margin:14px 0}
+  .card h2{font-size:15.5px;margin:0 0 4px;color:var(--accent)}
+  .card .sub{font-size:13px;color:var(--muted);margin:0 0 10px}
+  .script{background:var(--accent-soft);border-radius:8px;padding:10px 12px;font-size:14px;margin:6px 0 10px}
+  .item{padding:11px 0;border-top:1px solid #eef2f6}
+  .item.coder{background:var(--coder-soft);border:1px dashed #cdbfe6;border-radius:8px;
+    padding:9px 11px;margin:6px 0}
+  .q{margin:0 0 7px;font-size:14.5px}
+  .q .code{color:var(--muted);font-size:11.5px;font-weight:600;margin-right:6px}
+  .tag{display:inline-block;background:var(--coder);color:#fff;border-radius:4px;font-size:11px;
+    padding:1px 6px;margin-right:6px;vertical-align:1px}
+  .opt{color:var(--muted);font-size:12px}
+  .hint{margin:-3px 0 8px;font-size:12.5px;color:var(--coder)}
+  .req{color:#b3261e}
+  .scale{display:flex;flex-wrap:wrap;gap:6px}
+  .scale label{flex:1 1 40px;min-width:40px;text-align:center;border:1px solid var(--line);
+    border-radius:8px;padding:8px 4px;cursor:pointer;background:#fbfcfd;font-size:13.5px}
+  .scale input,.multi input[type=radio]{position:absolute;opacity:0;width:0;height:0}
+  .scale label:has(input:checked){background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
+  .endlab{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--muted);margin:4px 2px 0}
+  .multi{display:flex;flex-wrap:wrap;gap:7px}
+  .multi label{border:1px solid var(--line);border-radius:8px;padding:8px 11px;background:#fbfcfd;
+    cursor:pointer;font-size:13.5px;display:flex;gap:7px;align-items:center}
+  .multi label:has(input:checked){background:var(--accent-soft);border-color:var(--accent);font-weight:600}
+  .coder .multi label:has(input:checked){background:#e9e0f6;border-color:var(--coder)}
+  input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent);margin:0}
+  input[type=text],input[type=number],select,textarea{border:1px solid var(--line);border-radius:8px;
+    padding:8px 10px;font:inherit;background:#fff;max-width:100%}
+  input[type=text],select,textarea{width:100%}
+  textarea{min-height:76px;resize:vertical;line-height:1.45}
+  .unit{color:var(--muted);font-size:13px;margin-left:6px}
+  .armhead{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin:4px 0 8px}
+  .thumb{border:1px solid var(--line);border-radius:8px;background:#fff;padding:4px;cursor:zoom-in;
+    display:flex;flex-direction:column;align-items:center;gap:4px;width:160px}
+  .thumb img{width:150px;height:auto;max-height:210px;object-fit:contain;display:block}
+  .thumb span{font-size:11.5px;color:var(--muted)}
+  .missing{width:150px;height:190px;display:flex;align-items:center;justify-content:center;text-align:center;
+    font-size:12px;color:var(--warn);background:var(--warn-soft);border-radius:6px;padding:8px}
+  .cmpgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0 6px}
+  .cmpgrid .thumb{width:auto}
+  .cmpgrid .thumb img{width:100%;max-height:200px}
+  .cmpgrid b{font-size:13px;color:var(--ink)}
+  footer.bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);
+    padding:10px 16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;z-index:30}
+  button{font:inherit;border-radius:8px;border:1px solid var(--line);background:#fff;
+    padding:9px 13px;cursor:pointer;color:var(--ink)}
+  button.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .status{font-size:12.5px;color:var(--muted);flex:1 1 220px}
+  .status.ok{color:var(--ok)}
+  .menu{position:fixed;right:16px;bottom:64px;background:#fff;border:1px solid var(--line);border-radius:10px;
+    box-shadow:0 8px 24px #0002;padding:8px;display:flex;flex-direction:column;gap:6px;z-index:40;min-width:240px}
+  .menu button{text-align:left}
+  #viewer{position:fixed;inset:0;background:#0b1320;z-index:100;display:flex;flex-direction:column}
+  #viewer[hidden]{display:none}
+  .vbar{display:flex;gap:8px;align-items:center;padding:8px 12px;background:#111c2e;color:#fff}
+  .vbar span{flex:1;font-size:14px}
+  .vbar button{background:#ffffff18;color:#fff;border-color:#ffffff55}
+  .vbody{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;text-align:center}
+  .vbody img{display:block;margin:0 auto}
+  .vbody img.fit{max-width:100%;max-height:calc(100vh - 56px);width:auto;height:auto}
+  .vbody img.full{width:1080px;max-width:none;height:auto}   /* actual size; pan to read small print */
+  [hidden]{display:none !important}
+  @media (max-width:640px){
+    header{position:static}
+    header h1{font-size:15px}
+    .wrap{padding:12px 12px 130px}
+    .card{padding:14px 12px}
+    .cmpgrid{grid-template-columns:repeat(2,1fr)}
+    .thumb{width:130px}.thumb img{width:120px}
+    .missing{width:120px;height:160px}
+    footer.bar{padding:6px 12px 8px}
+    footer.bar .status{flex-basis:100%;order:-1;font-size:11.5px}
+    footer.bar button{flex:1 1 auto}
+    .menu{left:12px;right:12px;bottom:96px;min-width:0}
+  }
+  @media print{header,footer.bar,.menu{display:none}body{background:#fff}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="appTitle"></h1>
+  <span class="pill" id="countPill"></span>
+  <button id="langBtn" type="button"></button>
+</header>
+
+<div class="wrap">
+  <div class="note" id="introNote"></div>
+  <div class="idbar" id="idBar"></div>
+  <form id="f" autocomplete="off" onsubmit="return false"></form>
+</div>
+
+<footer class="bar">
+  <span class="status" id="status"></span>
+  <button type="button" id="moreBtn"></button>
+  <button type="button" id="saveBtn" class="primary"></button>
+</footer>
+
+<div class="menu" id="menu" hidden>
+  <button type="button" id="newBtn"></button>
+  <button type="button" id="sendBtn"></button>
+  <button type="button" id="testBtn"></button>
+  <button type="button" id="exportBtn"></button>
+  <button type="button" id="codebookBtn"></button>
+  <button type="button" id="clearBtn"></button>
+</div>
+
+<div id="viewer" hidden>
+  <div class="vbar"><span id="vcap"></span>
+    <button type="button" id="vzoom"></button><button type="button" id="vclose"></button></div>
+  <div class="vbody"><img id="vimg" alt="" class="fit"></div>
+</div>
+
+<script>
+/* =====================================================================
+   Message-testing interview, non-employee individual taxpayers
+   (WP OP bukan pegawai). Interviewer-administered, one page.
+
+   - Answers are kept on this device (localStorage) and sent to a Google
+     Sheet through a Google Apps Script web app (see apps_script/Code.gs).
+   - The web-app address and key are NOT in this file, because this page is
+     public. The interviewer opens  .../?e=<web app URL>&k=<key>  once; both
+     are then stored on the device and removed from the address bar.
+   - The four messages are shown in a random order per interview. Data
+     columns are fixed per arm (INF, DET, OUT, PUB), whatever the order.
+   ===================================================================== */
+
+const FORM_VERSION = "ne-wawancara-v1 2026-11-24";
+
+/* ---------- The four arms. Edit img paths and key points to match the final designs. ---------- */
+const ARMS = [
+  { code:"INF", letter:"A", img:"img/INF.jpg",
+    name:{id:"Informasi", en:"Information"},
+    key:{id:"Pokok pesan A (“Wajib Pajak Idaman? Kamu Juga Bisa!”): ciri wajib pajak patuh (laporan pas, tepat waktu, bebas denda, cocok dengan catatan), hak dan kewajiban wajib pajak, ajakan membuka Panduan WP.",
+         en:"Key points of A (“Model taxpayer? You can be one too!”): what a compliant taxpayer does (accurate return, on time, no fines, matches records), taxpayer rights and obligations, a pointer to the taxpayer guide."} },
+  { code:"DET", letter:"B", img:"img/DET.jpg",
+    name:{id:"Efek jera", en:"Deterrence"},
+    key:{id:"Pokok pesan B (“Pemberitahuan: Taati Pajak”): wajib pajak terdaftar wajib memenuhi kewajiban perpajakan sesuai ketentuan; ketidakpatuhan dapat menimbulkan sanksi administratif.",
+         en:"Key points of B (“Notice: Comply with Tax”): registered taxpayers must meet their tax obligations as the rules require; non-compliance can lead to administrative sanctions."} },
+  { code:"OUT", letter:"C", img:"img/OUT.jpg",
+    name:{id:"Efek jera + deteksi penyimpangan", en:"Deterrence + outlier detection"},
+    key:{id:"Pokok pesan C (“Taati Pajak” + meteran): rasio pajak efektif responden (pajak terutang ÷ penghasilan bruto pada SPT terakhir) berada di bawah rata-rata usaha sejenis; ketidakpatuhan dapat menimbulkan sanksi administratif; angka itu hanya indikasi awal.",
+         en:"Key points of C (“Comply with Tax” + gauge): the respondent's effective tax rate (tax due ÷ gross income on the latest return) is below the average for similar businesses; non-compliance can lead to administrative sanctions; the figure is only an early indication."} },
+  { code:"PUB", letter:"D", img:"img/PUB.jpg",
+    name:{id:"Informasi layanan publik", en:"Public service provision"},
+    key:{id:"Pokok pesan D (“Pajak Kita untuk Masa Depan Mereka”): pajak membiayai pendidikan (20% APBN untuk sektor pendidikan); ajakan mengenali hak dan kewajiban sebagai wajib pajak terdaftar.",
+         en:"Key points of D (“Our Taxes for Their Future”): taxes fund education (20% of the state budget goes to education); an invitation to learn your rights and obligations as a registered taxpayer."} }
+];
+const ARM = Object.fromEntries(ARMS.map(a=>[a.code,a]));
+
+/* ---------- Interface text ---------- */
+const UI = {
+  title:{id:"Wawancara Uji Pesan — Wajib Pajak Orang Pribadi Bukan Pegawai",
+         en:"Message-Testing Interview — Non-Employee Individual Taxpayers"},
+  intro:{id:"Formulir ini diisi oleh <b>pewawancara</b>. Jawaban tersimpan di perangkat ini, lalu dikirim ke Google Sheet tim. <b>Jangan menuliskan nama, NPWP, nomor telepon, atau alamat responden</b> di kolom mana pun. Jangan memakai mode penyamaran (incognito), karena isian dan antrean kiriman akan hilang.",
+         en:"This form is filled in by the <b>interviewer</b>. Answers are kept on this device and sent to the team's Google Sheet. <b>Do not write the respondent's name, tax number, phone number or address</b> in any field. Do not use a private (incognito) window, because entries and the send queue would be lost."},
+  idLabel:{id:"ID wawancara", en:"Interview ID"},
+  orderLabel:{id:"Urutan pesan", en:"Message order"},
+  startLabel:{id:"Mulai", en:"Started"},
+  save:{id:"Simpan & kirim", en:"Save & send"},
+  sending:{id:"Mengirim…", en:"Sending…"},
+  newI:{id:"Wawancara baru", en:"New interview"},
+  more:{id:"Lainnya ▴", en:"More ▴"},
+  send:{id:"Kirim ulang antrean", en:"Retry the send queue"},
+  test:{id:"Tes koneksi ke Google Sheet", en:"Test connection to the Google Sheet"},
+  exp:{id:"Ekspor CSV (semua wawancara di perangkat ini)", en:"Export CSV (all interviews on this device)"},
+  cb:{id:"Ekspor kodebuku (CSV)", en:"Export codebook (CSV)"},
+  clear:{id:"Hapus wawancara yang sudah terkirim dari perangkat", en:"Delete already-sent interviews from this device"},
+  lang:{id:"English", en:"Bahasa Indonesia"},
+  pill:{id:"Di perangkat: %n · belum terkirim: %q", en:"On device: %n · not sent: %q"},
+  noEndpoint:{id:"Belum terhubung ke Google Sheet. Buka tautan pewawancara (yang memuat ?e=…&k=…) satu kali di perangkat ini.",
+              en:"Not connected to the Google Sheet. Open the interviewer link (the one containing ?e=…&k=…) once on this device."},
+  endpointOk:{id:"Terhubung ke Google Sheet. Isian tersimpan otomatis.", en:"Connected to the Google Sheet. Entries are saved automatically."},
+  needEnum:{id:"Isi nama atau kode pewawancara di Bagian 0.", en:"Fill in the interviewer name or code in Part 0."},
+  needLoc:{id:"Isi lokasi wawancara di Bagian 0.", en:"Fill in the interview site in Part 0."},
+  needConsent:{id:"Isi persetujuan responden di Bagian 0.", en:"Record the respondent's consent in Part 0."},
+  badNum:{id:"Angka di luar rentang: ", en:"Number out of range: "},
+  confirmRefusal:{id:"Responden tidak bersedia. Simpan sebagai catatan penolakan (hanya Bagian 0)?",
+                  en:"The respondent declined. Save as a refusal record (Part 0 only)?"},
+  confirmBlank:{id:"%n pertanyaan belum terisi:\n%l\n\nSimpan saja?", en:"%n questions are still blank:\n%l\n\nSave anyway?"},
+  saved:{id:"Wawancara %id tersimpan di perangkat ini.", en:"Interview %id is saved on this device."},
+  sentOk:{id:"Sudah terkirim ke Google Sheet.", en:"It has been sent to the Google Sheet."},
+  sentQueued:{id:"%q wawancara belum terkirim; akan dicoba lagi otomatis saat ada sinyal.",
+              en:"%q interviews are not sent yet; they will be retried automatically when there is a signal."},
+  noEndpointSaved:{id:"Perangkat ini belum terhubung ke Google Sheet, jadi jawaban hanya tersimpan di perangkat. Ekspor CSV sebagai cadangan.",
+                   en:"This device is not connected to the Google Sheet, so the answers are only on this device. Export a CSV as a backup."},
+  confirmNew:{id:"Mulai wawancara baru? Isian wawancara yang sedang berjalan akan dihapus.",
+              en:"Start a new interview? The entries of the current interview will be discarded."},
+  testOk:{id:"Koneksi baik. Baris terisi di Sheet: %n", en:"Connection OK. Rows in the Sheet: %n"},
+  testFail:{id:"Koneksi gagal: %e", en:"Connection failed: %e"},
+  sendNone:{id:"Tidak ada yang menunggu dikirim.", en:"Nothing is waiting to be sent."},
+  sendFail:{id:"Pengiriman gagal. Data tetap di perangkat; coba lagi nanti.", en:"Sending failed. The data stay on this device; try again later."},
+  confirmClear:{id:"Hapus %n wawancara yang SUDAH terkirim dari perangkat ini? Yang belum terkirim tidak ikut terhapus.",
+                en:"Delete %n interviews that HAVE been sent from this device? Unsent ones are kept."},
+  nothing:{id:"Belum ada wawancara tersimpan di perangkat ini.", en:"No interviews are stored on this device yet."},
+  imgMissing:{id:"Gambar belum dipasang:", en:"Picture not installed yet:"},
+  tap:{id:"Ketuk untuk memperbesar", en:"Tap to enlarge"},
+  coderTag:{id:"Diisi pewawancara", en:"Interviewer coding"},
+  optional:{id:"(boleh kosong)", en:"(optional)"},
+  msgTitle:{id:"Bagian 3.%p — Pesan %p dari 4 · kode %l", en:"Part 3.%p — Message %p of 4 · code %l"},
+  msgShort:{id:"Pesan %p (kode %l)", en:"Message %p (code %l)"},
+  zoom:{id:"Perbesar / pas layar", en:"Zoom / fit"},
+  close:{id:"Tutup", en:"Close"}
+};
+
+/* ---------- Scales ---------- */
+const S = {
+  agree5:{n:5, from:1, lo:{id:"1 = Sangat tidak setuju",en:"1 = Strongly disagree"}, hi:{id:"5 = Sangat setuju",en:"5 = Strongly agree"}},
+  ease5:{n:5, from:1, lo:{id:"1 = Sangat sulit",en:"1 = Very difficult"}, hi:{id:"5 = Sangat mudah",en:"5 = Very easy"}},
+  p11:{n:11, from:0, lo:{id:"0 = Tidak mungkin",en:"0 = Impossible"}, hi:{id:"10 = Pasti",en:"10 = Certain"}},
+  know11:{n:11, from:0, lo:{id:"0 = Tidak tahu apa pun",en:"0 = Knows nothing"}, hi:{id:"10 = Tahu semuanya",en:"10 = Knows everything"}}
+};
+const o = (v,id,en)=>({v,id,en});
+const YA_RAGU_TIDAK = [o("ya","Ya","Yes"), o("ragu","Ragu-ragu","Not sure"), o("tidak","Tidak","No")];
+
+/* ---------- Questions ---------- */
+const SEC_SESSION = { id:"S0", t:{id:"Bagian 0. Sesi Wawancara",en:"Part 0. Interview Session"},
+  s:{id:"Diisi pewawancara. Nama, lokasi, dan cara wawancara diingat perangkat ini untuk wawancara berikutnya.",
+     en:"Filled in by the interviewer. Name, site and mode are remembered on this device for the next interview."},
+  script:{id:"<b>Bacakan:</b> “Selamat pagi/siang, Bapak/Ibu. Kami dari Direktorat Jenderal Pajak sedang menguji beberapa rancangan pesan email untuk wajib pajak. Wawancara ini sekitar 40 menit dan sukarela; Bapak/Ibu boleh berhenti kapan saja. Tidak ada jawaban benar atau salah, yang kami nilai adalah pesannya, bukan Bapak/Ibu. Kami tidak mencatat nama, NPWP, atau nomor telepon Bapak/Ibu. Apakah Bapak/Ibu bersedia?”",
+          en:"<b>Read aloud:</b> “Good morning/afternoon. We are from the Directorate General of Taxes and are testing several draft email messages for taxpayers. The interview takes about 40 minutes and is voluntary; you may stop at any time. There are no right or wrong answers: we are assessing the messages, not you. We do not record your name, tax number or phone number. Are you willing to take part?”"},
+  items:[
+   {id:"ENUM", type:"text", req:true, persist:true, q:{id:"Nama atau kode pewawancara",en:"Interviewer name or code"}},
+   {id:"LOKASI", type:"text", req:true, persist:true, q:{id:"Lokasi atau KPP tempat wawancara",en:"Interview site or tax office"}},
+   {id:"MODE", type:"choice", persist:true, q:{id:"Cara wawancara",en:"Interview mode"},
+     opts:[o("tatap_muka","Tatap muka, gambar ditunjukkan di layar ini","Face to face, pictures shown on this screen"),
+           o("video","Panggilan video, berbagi layar","Video call, screen sharing"),
+           o("telepon","Telepon, gambar dikirim lewat WhatsApp atau email","Phone, pictures sent by WhatsApp or email")]},
+   {id:"CONSENT", type:"choice", req:true, q:{id:"Responden bersedia diwawancarai dan jawabannya dicatat",en:"The respondent agrees to be interviewed and to have answers recorded"},
+     opts:[o("ya","Bersedia","Agrees"), o("tidak","Tidak bersedia","Declines")]}
+  ]};
+
+const SEC_BACKGROUND = { id:"S1", needConsent:true, t:{id:"Bagian 1. Latar Belakang",en:"Part 1. Background"},
+  s:{id:"Boleh ditanyakan dengan kalimat sendiri.",en:"May be asked in your own words."},
+  items:[
+   {id:"AGE", type:"number", min:17, max:100, unit:{id:"tahun",en:"years"}, q:{id:"Umur",en:"Age"}},
+   {id:"SEX", type:"choice", q:{id:"Jenis kelamin",en:"Sex"},
+     opts:[o("L","Laki-laki","Male"), o("P","Perempuan","Female")]},
+   {id:"EDU", type:"choice", q:{id:"Pendidikan terakhir",en:"Highest education"},
+     opts:[o("sd_smp","SD atau SMP","Primary or junior secondary"), o("sma","SMA atau SMK","Senior secondary"),
+           o("diploma","Diploma","Diploma"), o("s1","Sarjana (S1)","Bachelor"), o("pasca","Pascasarjana (S2/S3)","Postgraduate")]},
+   {id:"YRS_NPWP", type:"number", min:0, max:70, unit:{id:"tahun",en:"years"},
+     q:{id:"Sudah berapa lama Anda terdaftar sebagai wajib pajak (memiliki NPWP)?",en:"How long have you been registered as a taxpayer (held a tax number)?"}},
+   {id:"YRS_BIZ", type:"number", min:0, max:70, unit:{id:"tahun",en:"years"},
+     q:{id:"Sudah berapa lama Anda menjalankan usaha atau pekerjaan bebas yang sekarang?",en:"How long have you been running your current business or independent work?"}},
+   {id:"WORK", type:"select", q:{id:"Jenis usaha atau pekerjaan",en:"Type of business or work"},
+     opts:[o("dagang","Perdagangan (toko, grosir, warung)","Trade (shop, wholesale, stall)"),
+           o("daring","Jualan daring (marketplace, media sosial)","Online selling (marketplace, social media)"),
+           o("kuliner","Makanan dan minuman","Food and drink"),
+           o("jasa","Jasa (salon, bengkel, laundry, penjahit, dll.)","Services (salon, repair shop, laundry, tailor, etc.)"),
+           o("transport","Transportasi atau logistik","Transport or logistics"),
+           o("profesi","Pekerjaan bebas berizin (dokter, notaris, advokat, akuntan, arsitek, dll.)","Licensed profession (doctor, notary, lawyer, accountant, architect, etc.)"),
+           o("kreatif","Pekerja lepas atau kreatif (desainer, kreator konten, penulis, dll.)","Freelance or creative work (designer, content creator, writer, etc.)"),
+           o("tani","Pertanian, peternakan, atau perikanan","Farming, livestock or fishery"),
+           o("konstruksi","Konstruksi atau kontraktor","Construction or contracting"),
+           o("sewa","Penyewaan (rumah, kendaraan, alat)","Renting out (property, vehicles, equipment)"),
+           o("lain","Lainnya","Other")]},
+   {id:"WORK_TXT", type:"text", opt:true, q:{id:"Sebutkan usaha atau pekerjaannya secara singkat",en:"Describe the business or work briefly"}},
+   {id:"ROLE", type:"choice", q:{id:"Dalam urusan pajak usaha atau pekerjaan ini, Anda bertindak sebagai",en:"For the taxes of this business or work, you act as"},
+     opts:[o("sendiri","Diri sendiri","Yourself"), o("pengurus","Pengurus","Manager"), o("karyawan","Karyawan yang ditugasi","An assigned employee")]},
+   {id:"HANDLER", type:"choice", q:{id:"Siapa yang biasanya mengurus pajak Anda?",en:"Who usually handles your taxes?"},
+     opts:[o("sendiri","Saya sendiri","Myself"), o("keluarga","Keluarga atau teman","Family or a friend"),
+           o("staf","Karyawan atau staf","An employee or staff member"),
+           o("konsultan_resmi","Konsultan pajak resmi","A licensed tax consultant"),
+           o("konsultan_tidak","Konsultan atau perantara tidak resmi","An unlicensed consultant or intermediary"),
+           o("petugas","Dibantu petugas pajak","A tax officer helps")]},
+   {id:"REGIME", type:"choice", q:{id:"Skema pajak yang Anda pakai saat ini",en:"Which tax scheme do you use now?"},
+     opts:[o("final","PPh final 0,5% dari omzet (PP 55/2022)","0.5% final tax on turnover (PP 55/2022)"),
+           o("umum","Tarif umum dengan angsuran PPh Pasal 25","Regular rates with Art. 25 instalments"),
+           o("tidak_tahu","Tidak tahu","Don't know")]},
+   {id:"PAY_MO", type:"choice", q:{id:"Rata-rata, berapa pajak yang Anda setor setiap bulan?",en:"On average, how much tax do you pay each month?"},
+     opts:[o("nol","Tidak ada setoran bulanan","No monthly payment"),
+           o("lt100rb","Kurang dari Rp100 ribu","Under Rp100 thousand"),
+           o("rb100_500","Rp100 ribu sampai Rp500 ribu","Rp100 to 500 thousand"),
+           o("rb500_1jt","Rp500 ribu sampai Rp1 juta","Rp500 thousand to 1 million"),
+           o("jt1_5","Rp1 juta sampai Rp5 juta","Rp1 to 5 million"),
+           o("gt5jt","Lebih dari Rp5 juta","Over Rp5 million"),
+           o("tidak_tahu","Tidak tahu","Don't know"),
+           o("tolak","Tidak ingin menjawab","Prefers not to say")]},
+   {id:"FILED", type:"choice", q:{id:"Bagaimana pelaporan SPT Tahunan Anda yang terakhir?",en:"How was your most recent annual return filed?"},
+     opts:[o("tepat","Tepat waktu","On time"), o("telat","Terlambat","Late"), o("belum","Belum melapor","Not filed"), o("lupa","Tidak ingat","Can't remember")]},
+   {id:"CORETAX", type:"choice", q:{id:"Apakah Anda sudah memakai Coretax?",en:"Have you used Coretax?"},
+     opts:[o("pakai","Sudah, untuk melapor atau membayar","Yes, to file or pay"),
+           o("aktif","Sudah aktivasi, belum dipakai","Activated, not used yet"),
+           o("belum","Belum aktivasi","Not activated"),
+           o("tidak_kenal","Belum pernah mendengar Coretax","Never heard of Coretax")]}
+  ]};
+
+const SEC_PERCEPTION = { id:"S2", needConsent:true, t:{id:"Bagian 2. Pengetahuan dan Persepsi",en:"Part 2. Knowledge and Perceptions"},
+  s:{id:"Ajukan sebelum menunjukkan gambar pesan apa pun.",en:"Ask before showing any message picture."},
+  items:[
+   {id:"KNOWINFO", type:"radio", scale:"know11",
+     q:{id:"Menurut Anda, seberapa banyak DJP mengetahui informasi tentang usaha atau pekerjaan Anda, misalnya penghasilan, transaksi, atau rekening?",
+        en:"How much do you think the tax administration knows about your business or work, such as income, transactions or bank accounts?"}},
+   {id:"DETECT", type:"radio", scale:"p11",
+     q:{id:"Seberapa besar kemungkinan DJP mengetahui bila seseorang dengan usaha seperti Anda melaporkan penghasilan lebih kecil dari yang sebenarnya?",
+        en:"How likely is the tax administration to find out if someone with a business like yours reports less income than they really earn?"}},
+   {id:"FINED", type:"radio", scale:"p11",
+     q:{id:"Seberapa besar kemungkinan seseorang benar-benar dikenai sanksi bila terlambat atau kurang membayar pajak?",
+        en:"How likely is it that someone is actually penalised for paying tax late or paying too little?"}},
+   {id:"SANK_KNOW", type:"choice", opts:YA_RAGU_TIDAK,
+     q:{id:"Apakah Anda tahu sanksi bila terlambat melapor, terlambat membayar, atau kurang membayar pajak?",
+        en:"Do you know the sanctions for filing late, paying late or paying too little?"}},
+   {id:"SANK_TXT", type:"textarea", showIf:{field:"SANK_KNOW", in:["ya","ragu"]},
+     q:{id:"Jika ya, apa saja sanksinya? Catat jawaban responden apa adanya.",en:"If yes, what are they? Record the respondent's own words."}},
+   {id:"SANK_CODE", type:"multi", coder:true, showIf:{field:"SANK_KNOW", in:["ya","ragu"]},
+     q:{id:"Sanksi yang disebut responden",en:"Sanctions the respondent mentioned"},
+     opts:[o("denda_lapor","Denda terlambat lapor SPT","Late-filing fine"),
+           o("bunga","Bunga atas keterlambatan bayar","Interest on late payment"),
+           o("kurang_bayar","Sanksi atas kurang bayar","Penalty for underpayment"),
+           o("periksa","Pemeriksaan","Audit"),
+           o("pidana","Pidana atau penyitaan","Prosecution or seizure"),
+           o("keliru","Keliru atau tidak spesifik","Wrong or vague")]},
+   {id:"EASE_FILE", type:"radio", scale:"ease5", q:{id:"Seberapa mudah bagi Anda melaporkan SPT?",en:"How easy is it for you to file your tax return?"}},
+   {id:"EASE_PAY", type:"radio", scale:"ease5", q:{id:"Seberapa mudah bagi Anda menyetor atau membayar pajak?",en:"How easy is it for you to pay your tax?"}},
+   {id:"HARDSTEP", type:"choice", q:{id:"Dari langkah berikut, mana yang paling sulit bagi Anda?",en:"Which of these steps is hardest for you?"},
+     opts:[o("hitung","Menghitung pajak","Working out the tax"),
+           o("lapor","Mengisi dan melaporkan SPT","Completing and filing the return"),
+           o("billing","Membuat kode billing dan menyetor","Creating the billing code and paying"),
+           o("dana","Menyediakan uang untuk setoran","Having the money to pay"),
+           o("aturan","Memahami aturan (skema, tarif, batas waktu)","Understanding the rules (scheme, rates, deadlines)"),
+           o("sistem","Masuk dan memakai sistem (Coretax)","Logging in and using the system (Coretax)"),
+           o("tidak_ada","Tidak ada yang sulit","None is hard")]},
+   {id:"LIQ1", type:"radio", scale:"agree5",
+     q:{id:"Saya lebih memilih terlambat melapor daripada melapor tetapi belum bisa menyetor.",en:"I would rather file late than file and be unable to pay."}},
+   {id:"LIQ2", type:"radio", scale:"agree5",
+     q:{id:"Kalau jumlah setorannya besar, saya cenderung menunda melapor.",en:"When the amount due is large, I tend to put off filing."}},
+   {id:"LIQ3", type:"radio", scale:"agree5",
+     q:{id:"Saya selalu menyisihkan uang untuk pajak sebelum jatuh tempo.",en:"I always set money aside for tax before it is due."}},
+   {id:"NORM", type:"number", min:0, max:100, unit:{id:"dari 100 orang",en:"out of 100"},
+     q:{id:"Dari 100 orang dengan usaha atau pekerjaan seperti Anda, berapa orang yang menurut Anda melaporkan penghasilannya apa adanya?",
+        en:"Out of 100 people with a business or work like yours, how many do you think report their income as it really is?"}},
+   {id:"EMAIL_OPEN", type:"choice", q:{id:"Bila menerima email dari DJP, apa yang biasanya Anda lakukan?",en:"When you receive an email from the tax administration, what do you usually do?"},
+     opts:[o("langsung","Langsung membuka dan membaca","Open and read it straight away"),
+           o("subjek","Membuka bila subjeknya terlihat penting","Open it if the subject looks important"),
+           o("cek","Memeriksa alamat pengirim lebih dahulu","Check the sender address first"),
+           o("abaikan","Mengabaikan atau menghapus","Ignore or delete it"),
+           o("jarang","Jarang membuka email","Rarely open email"),
+           o("belum","Belum pernah menerima","Never received one")]},
+   {id:"EMAIL_DOUBT", type:"radio", scale:"agree5",
+     q:{id:"Saya khawatir email yang mengatasnamakan DJP sebenarnya penipuan.",en:"I worry that an email in the tax administration's name is actually a scam."}},
+   {id:"AUTH_TXT", type:"textarea",
+     q:{id:"Apa yang membuat Anda yakin bahwa sebuah email benar-benar dari DJP?",en:"What would make you sure that an email really comes from the tax administration?"}},
+   {id:"AUTH_CODE", type:"multi", coder:true, q:{id:"Tanda keaslian yang disebut responden",en:"Authenticity markers the respondent mentioned"},
+     opts:[o("domain","Alamat pengirim pajak.go.id","Sender address pajak.go.id"),
+           o("logo","Logo atau kop resmi","Official logo or letterhead"),
+           o("identitas","Nama atau NPWP penerima dalam pesan","Recipient's name or tax number in the message"),
+           o("kontak","Nomor Kring Pajak atau kontak KPP","Call-centre or tax-office contact"),
+           o("cek_sistem","Bisa dicek di Coretax atau ke KPP","Can be checked in Coretax or at the office"),
+           o("tanpa_tautan","Tidak ada tautan atau lampiran mencurigakan","No suspicious links or attachments"),
+           o("lain","Lainnya","Other")]},
+   {id:"FRQ", type:"choice", q:{id:"Berapa kali dalam setahun DJP sebaiknya mengirim email seperti ini kepada Anda?",en:"How many times a year should the tax administration send you emails like this?"},
+     opts:[o("k1","Satu kali","Once"), o("k2","Dua kali","Twice"), o("k3_4","Tiga sampai empat kali","Three or four times"),
+           o("k5_6","Lima sampai enam kali","Five or six times"), o("bulanan","Setiap bulan","Every month"), o("tidak","Tidak perlu sama sekali","Not at all")]},
+   {id:"SPEND", type:"multi", q:{id:"Penggunaan pajak di bidang mana yang paling ingin Anda ketahui? (boleh lebih dari satu)",en:"Which areas of tax spending would you most like to know about? (more than one allowed)"},
+     opts:[o("pendidikan","Pendidikan","Education"), o("kesehatan","Kesehatan","Health"),
+           o("infrastruktur","Jalan dan infrastruktur","Roads and infrastructure"),
+           o("bansos","Bantuan sosial","Social assistance"), o("keamanan","Keamanan dan pertahanan","Security and defence"),
+           o("daerah","Pembangunan di daerah saya","Development in my own area"),
+           o("umkm","Dukungan untuk usaha kecil","Support for small businesses")]}
+  ]};
+
+const SEC_ARMINTRO = { id:"S3", needConsent:true, t:{id:"Bagian 3. Uji Pesan",en:"Part 3. Message Testing"},
+  script:{id:"<b>Petunjuk pewawancara.</b> Tunjukkan pesan satu per satu <b>sesuai urutan di layar</b>; ketuk gambar untuk memperbesar. Jangan menyebut jenis pesannya. Biarkan responden membaca sendiri kira-kira satu menit. <b>Jangan menjelaskan isi pesan</b> sebelum responden menjawab “apa isi pesan ini”; bila perlu, jelaskan sesudahnya. Kolom ungu diisi pewawancara segera setelah responden menjawab.",
+          en:"<b>Interviewer instructions.</b> Show the messages one at a time <b>in the order on screen</b>; tap a picture to enlarge it. Do not name the type of message. Let the respondent read on their own for about a minute. <b>Do not explain the message</b> before the respondent has answered “what is this message about”; explain afterwards if needed. Purple fields are filled in by the interviewer right after the respondent answers."},
+  items:[] };
+
+/* Items asked for every arm. Ids are prefixed with the arm code, e.g. INF_FEEL. */
+function armItems(a){
+  const p = a.code;
+  const extra = ARM_EXTRA[p] || {};
+  return [
+   {id:p+"_SEEN", type:"choice", q:{id:"Apakah Anda pernah menerima pesan dengan isi atau desain seperti ini sebelumnya?",en:"Have you received a message with content or a design like this before?"},
+     opts:[o("ya","Pernah","Yes"), o("tidak","Tidak pernah","Never"), o("ragu","Tidak yakin","Not sure")]},
+   {id:p+"_SEEN_TXT", type:"text", opt:true, showIf:{field:p+"_SEEN", in:["ya","ragu"]},
+     q:{id:"Kapan dan dari mana?",en:"When and from whom?"}},
+   {id:p+"_FEEL", type:"textarea", q:{id:"Apa yang Anda rasakan saat pertama kali membaca pesan ini?",en:"What did you feel when you first read this message?"}},
+   {id:p+"_FEEL_CODE", type:"choice", coder:true, q:{id:"Nada perasaan yang diungkapkan",en:"Tone of the feeling expressed"},
+     opts:[o("positif","Positif","Positive"), o("netral","Netral","Neutral"), o("negatif","Negatif","Negative"), o("campuran","Campuran","Mixed")]},
+   {id:p+"_CONTENT", type:"textarea", q:{id:"Menurut Anda, apa isi pesan ini?",en:"In your own words, what is this message about?"}},
+   {id:p+"_COMP", type:"choice", coder:true, hint:a.key, q:{id:"Pemahaman responden atas isi pesan",en:"Respondent's grasp of the content"},
+     opts:[o("tepat","Tepat","Correct"), o("sebagian","Sebagian","Partly"), o("keliru","Keliru","Wrong"), o("tidak_tahu","Tidak tahu","Doesn't know")]},
+   ...(extra.afterComp || []),
+   {id:p+"_ACTION", type:"textarea", q:{id:"Apa yang akan Anda lakukan setelah menerima dan membaca pesan ini?",en:"What would you do after receiving and reading this message?"}},
+   {id:p+"_ACT_CODE", type:"multi", coder:true, q:{id:"Tindakan yang disebut responden",en:"Actions the respondent mentioned"},
+     opts:[o("tautan","Membuka tautan atau memeriksa akun","Open the link or check the account"),
+           o("periksa","Memeriksa ulang hitungan atau laporan","Re-check the calculation or return"),
+           o("lapor_bayar","Melapor atau membayar","File or pay"),
+           o("tanya_djp","Bertanya ke petugas, KPP, atau Kring Pajak","Ask an officer, the office or the call centre"),
+           o("tanya_lain","Bertanya ke konsultan, keluarga, atau teman","Ask a consultant, family or friends"),
+           o("cek_asli","Memeriksa keaslian pesan","Check the message is genuine"),
+           o("abaikan","Mengabaikan","Ignore it"),
+           o("hapus","Menghapus atau menandai sebagai spam","Delete it or mark it as spam")]},
+   {id:p+"_EASE", type:"radio", scale:"ease5", q:{id:"Seberapa mudah pesan ini dipahami?",en:"How easy is this message to understand?"}},
+   {id:p+"_WHY", type:"textarea", q:{id:"Mengapa demikian?",en:"Why?"}},
+   {id:p+"_TRUST", type:"choice", q:{id:"Apakah Anda yakin pesan ini resmi dari DJP?",en:"Are you confident this message really comes from the tax administration?"},
+     opts:[o("yakin","Yakin","Confident"), o("ragu","Ragu-ragu","Unsure"), o("tidak","Tidak yakin","Not confident")]},
+   {id:p+"_TRUST_WHY", type:"textarea", opt:true, q:{id:"Apa yang membuat Anda yakin atau ragu?",en:"What makes you confident or doubtful?"}},
+   ...(extra.beforeSuggest || []),
+   {id:p+"_SUGGEST", type:"textarea", q:{id:"Apakah ada saran untuk memperbaiki desain dan isi pesan ini? (kata-kata, warna, ukuran huruf, gambar)",
+        en:"Any suggestions to improve the design or content of this message? (wording, colours, font size, pictures)"}}
+  ];
+}
+
+/* Probes that belong to one arm only. */
+const ARM_EXTRA = {
+  INF:{ beforeSuggest:[
+   {id:"INF_MISSING", type:"textarea", q:{id:"Informasi apa yang masih kurang atau membingungkan dalam pesan ini?",en:"What information is missing or confusing in this message?"}}]},
+  DET:{ beforeSuggest:[
+   {id:"DET_PUSH", type:"textarea", q:{id:"Bagian mana yang paling mendorong Anda untuk bertindak, dan bagian mana yang terasa mengancam atau tidak nyaman?",
+        en:"Which part most pushes you to act, and which part feels threatening or uncomfortable?"}}]},
+  OUT:{ afterComp:[
+   {id:"OUT_PCT", type:"textarea", q:{id:"Apa arti angka persentase dalam pesan ini?",en:"What does the percentage in this message mean?"}},
+   {id:"OUT_PCT_CODE", type:"choice", coder:true,
+     q:{id:"Responden memahami bahwa angka itu membandingkan pajak terhadap penghasilannya dengan rata-rata profesinya",
+        en:"The respondent understands that the figure compares their tax-to-income ratio with their profession's average"},
+     opts:[o("ya","Ya","Yes"), o("sebagian","Sebagian","Partly"), o("tidak","Tidak","No")]},
+   {id:"OUT_SRC", type:"textarea", q:{id:"Menurut Anda, dari mana DJP memperoleh angka itu?",en:"Where do you think the tax administration got that figure from?"}}],
+   beforeSuggest:[
+   {id:"OUT_SUSPECT", type:"radio", scale:"agree5", q:{id:"Pesan ini membuat saya merasa dicurigai.",en:"This message makes me feel suspected."}},
+   {id:"OUT_FAIR", type:"radio", scale:"agree5", q:{id:"Membandingkan pajak saya dengan rata-rata profesi saya adalah cara yang adil.",en:"Comparing my tax with my profession's average is a fair approach."}},
+   {id:"OUT_DISPUTE", type:"radio", scale:"agree5", q:{id:"Saya khawatir angka ini membuat saya berselisih paham dengan petugas pajak.",en:"I worry this figure would lead to a dispute with a tax officer."}},
+   {id:"OUT_BELOW", type:"textarea", q:{id:"Bila rasio Anda ternyata di bawah rata-rata profesi, apa yang akan Anda lakukan?",en:"If your ratio turned out to be below your profession's average, what would you do?"}},
+   {id:"OUT_ABOVE", type:"textarea",
+     q:{id:"Bacakan: “Untuk wajib pajak yang rasionya di atas rata-rata, pesannya hanya berbunyi: Rasio pajak Anda berada dalam kisaran wajar untuk profesi Anda, tanpa angka.” Apa yang Anda pikirkan bila menerima kalimat itu?",
+        en:"Read aloud: “For taxpayers above the average, the message only says: Your tax ratio is within the usual range for your profession, with no figure.” What would you think if you received that sentence?"}},
+   {id:"OUT_ALT", type:"choice",
+     q:{id:"Mana yang lebih membantu Anda: angka rata-rata profesi seperti dalam pesan ini, atau DJP membantu menghitung berapa pajak yang seharusnya Anda bayar?",
+        en:"Which would help you more: a profession average like the one in this message, or the tax administration helping you work out how much tax you should pay?"},
+     opts:[o("rata2","Angka rata-rata profesi","The profession average"), o("hitung","Bantuan menghitung","Help with the calculation"),
+           o("keduanya","Keduanya","Both"), o("tidak","Tidak keduanya","Neither")]}]},
+  PUB:{ beforeSuggest:[
+   {id:"PUB_REAL", type:"textarea", q:{id:"Apakah contoh penggunaan pajak dalam pesan ini terasa nyata dan dekat dengan kehidupan Anda? Mengapa?",
+        en:"Does the example of how taxes are used feel real and close to your own life? Why?"}}]}
+};
+
+const SEC_COMPARE = { id:"S4", needConsent:true, compare:true, t:{id:"Bagian 4. Perbandingan Keempat Pesan",en:"Part 4. Comparing the Four Messages"},
+  s:{id:"Tunjukkan keempat pesan berdampingan (gambar di bawah). Nomor pesan mengikuti urutan tampil tadi.",
+     en:"Show all four messages side by side (pictures below). Message numbers follow the order they were shown."},
+  items:[
+   {id:"CMP_CLEAR", type:"choice", arms:true, q:{id:"Mana yang paling mudah dipahami?",en:"Which is easiest to understand?"}},
+   {id:"CMP_LIKE", type:"choice", arms:true, q:{id:"Mana yang paling Anda sukai?",en:"Which do you like most?"}},
+   {id:"CMP_ACT", type:"choice", arms:true, q:{id:"Mana yang paling mendorong Anda melapor dan membayar dengan benar dan tepat waktu?",en:"Which most pushes you to file and pay correctly and on time?"}},
+   {id:"CMP_WORST", type:"choice", arms:true, q:{id:"Mana yang paling membuat Anda tidak nyaman atau ingin mengabaikannya?",en:"Which most makes you uncomfortable or want to ignore it?"}},
+   {id:"CMP_WHY", type:"textarea", q:{id:"Jelaskan alasan pilihan-pilihan tadi.",en:"Explain the reasons for those choices."}}
+  ]};
+
+const SEC_CLOSE = { id:"S5", needConsent:true, t:{id:"Bagian 5. Penutup",en:"Part 5. Closing"},
+  items:[
+   {id:"OTHER", type:"textarea", opt:true, q:{id:"Apakah ada hal lain yang ingin Anda sampaikan kepada DJP tentang pesan atau layanan pajak?",en:"Is there anything else you would like to tell the tax administration about its messages or services?"}},
+   {id:"NOTE_ENUM", type:"textarea", opt:true, coder:true, q:{id:"Catatan pewawancara (suasana, gangguan, hal yang perlu diketahui analis)",en:"Interviewer notes (setting, interruptions, anything the analyst should know)"}}
+  ]};
+
+const ARM_SECTIONS = ARMS.map(a=>({ id:"ARM_"+a.code, arm:a.code, needConsent:true, items:armItems(a) }));
+
+/* Canonical order (data columns): arms always INF, DET, OUT, PUB. */
+const SECTIONS_CANON = [SEC_SESSION, SEC_BACKGROUND, SEC_PERCEPTION, SEC_ARMINTRO, ...ARM_SECTIONS, SEC_COMPARE, SEC_CLOSE];
+const ALL_ITEMS = SECTIONS_CANON.flatMap(s=>s.items.map(it=>Object.assign(it,{sec:s.id})));
+const ITEM = Object.fromEntries(ALL_ITEMS.map(it=>[it.id,it]));
+const META = ["resp_id","form_version","lang","started_at","saved_at","durasi_menit","arm_order",
+              ...ARMS.map(a=>a.code+"_POS")];
+const COLUMNS = [...META, ...ALL_ITEMS.map(it=>it.id)];
+const PERSIST = ALL_ITEMS.filter(it=>it.persist).map(it=>it.id);
+
+/* ---------- Storage (every access guarded: private windows can throw) ---------- */
+const K = { draft:"ne_draft_v1", recs:"ne_records_v1", cfg:"ne_endpoint_v1", lang:"ne_lang_v1", sess:"ne_session_v1" };
+const lsGet = (k, d)=>{ try{ const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } };
+const lsSet = (k, v)=>{ try{ localStorage.setItem(k, JSON.stringify(v)); return true; }catch(e){ return false; } };
+const getRecs = ()=> lsGet(K.recs, []);
+const setRecs = (a)=> lsSet(K.recs, a);
+
+let LANG = lsGet(K.lang, "id");
+const L = (x)=> (x && (x[LANG] ?? x.id)) || "";
+const fill = (s, m)=> Object.entries(m).reduce((t,[k,v])=>t.split("%"+k).join(v), s);
+
+/* ---------- Endpoint (web app URL + key) ---------- */
+function loadCfg(){
+  const q = new URLSearchParams(location.search);
+  const e = q.get("e");
+  if(e){
+    const ok = /^https:\/\/script\.google\.com\//.test(e) || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//.test(e);
+    if(ok){ lsSet(K.cfg, { endpoint:e, key:q.get("k") || "" }); }
+    history.replaceState({}, "", location.pathname);   // do not leave the key in the address bar
+  }
+  return lsGet(K.cfg, null);
+}
+let CFG = loadCfg();
+const hasEndpoint = ()=> !!(CFG && CFG.endpoint);
+
+/* ---------- Draft (the interview in progress) ---------- */
+function rid(){
+  const b = new Uint8Array(6); crypto.getRandomValues(b);
+  const s = Array.from(b, x=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[x % 32]).join("");
+  const d = new Date(), p = (n)=>String(n).padStart(2,"0");
+  return "NE-" + String(d.getFullYear()).slice(2) + p(d.getMonth()+1) + p(d.getDate()) + "-" + s;
+}
+function shuffled(arr){
+  const a = arr.slice(), r = new Uint32Array(a.length); crypto.getRandomValues(r);
+  for(let i=a.length-1;i>0;i--){ const j = r[i] % (i+1); [a[i],a[j]] = [a[j],a[i]]; }
+  return a;
+}
+function freshDraft(){
+  const sess = lsGet(K.sess, {});
+  const vals = {}; for(const k of PERSIST) if(sess[k]) vals[k] = sess[k];
+  return { resp_id:rid(), started_at:new Date().toISOString(), order:shuffled(ARMS.map(a=>a.code)), vals };
+}
+let DRAFT = lsGet(K.draft, null);
+if(!DRAFT || !DRAFT.resp_id || !Array.isArray(DRAFT.order) || DRAFT.order.length !== ARMS.length) DRAFT = freshDraft();
+
+/* ---------- Rendering ---------- */
+const form = document.getElementById("f");
+
+function scaleHTML(it){
+  const sc = S[it.scale]; let h = `<div class="scale">`;
+  for(let i=0;i<sc.n;i++){ const v = sc.from + i;
+    h += `<label><input type="radio" name="${it.id}" value="${v}"><span>${v}</span></label>`; }
+  return h + `</div><div class="endlab"><span>${L(sc.lo)}</span><span>${L(sc.hi)}</span></div>`;
+}
+function optsFor(it){
+  if(!it.arms) return it.opts;
+  return DRAFT.order.map((c,i)=>({ v:c,
+    id:fill(UI.msgShort.id,{p:i+1,l:ARM[c].letter}), en:fill(UI.msgShort.en,{p:i+1,l:ARM[c].letter}) }));
+}
+function itemHTML(it){
+  const lab = (x)=> LANG==="id" ? x.id : x.en;
+  let body = "";
+  if(it.type==="radio") body = scaleHTML(it);
+  else if(it.type==="choice") body = `<div class="multi">` + optsFor(it).map(x=>
+      `<label><input type="radio" name="${it.id}" value="${x.v}">${lab(x)}</label>`).join("") + `</div>`;
+  else if(it.type==="multi") body = `<div class="multi">` + it.opts.map(x=>
+      `<label><input type="checkbox" name="${it.id}" value="${x.v}">${lab(x)}</label>`).join("") + `</div>`;
+  else if(it.type==="select") body = `<select name="${it.id}"><option value="">—</option>` +
+      it.opts.map(x=>`<option value="${x.v}">${lab(x)}</option>`).join("") + `</select>`;
+  else if(it.type==="text") body = `<input type="text" name="${it.id}" maxlength="200">`;
+  else if(it.type==="textarea") body = `<textarea name="${it.id}" rows="3" maxlength="5000"></textarea>`;
+  else if(it.type==="number") body = `<input type="number" name="${it.id}" inputmode="numeric" min="${it.min}" max="${it.max}" style="width:110px">` +
+      (it.unit ? `<span class="unit">${L(it.unit)}</span>` : "");
+  const tag = it.coder ? `<span class="tag">${L(UI.coderTag)}</span>` : "";
+  const req = it.req ? ` <span class="req">*</span>` : "";
+  const opt = it.opt ? ` <span class="opt">${L(UI.optional)}</span>` : "";
+  const hint = it.hint ? `<p class="hint">${L(it.hint)}</p>` : "";
+  // On screen, arm items show the neutral letter (B_SEEN), never the arm code (DET_SEEN),
+  // because the respondent may see the screen. Data columns keep the arm code.
+  return `<div class="item${it.coder?" coder":""}" id="it-${it.id}"><p class="q"><span class="code">${showCode(it.id)}</span>${tag}${L(it.q)}${req}${opt}</p>${hint}${body}</div>`;
+}
+function showCode(id){
+  const pre = id.split("_")[0];
+  return ARM[pre] ? ARM[pre].letter + id.slice(pre.length) : id;
+}
+function thumbHTML(code, cap){
+  const a = ARM[code];
+  return `<button type="button" class="thumb" data-arm="${code}"><img src="${a.img}" alt="" onerror="imgMissing(this)">` +
+         `<span>${cap}</span></button>`;
+}
+function sectionHTML(sec, pos){
+  let title = L(sec.t), head = "";
+  if(sec.arm){
+    const a = ARM[sec.arm];
+    title = L(UI.msgTitle).split("%p").join(pos).split("%l").join(a.letter);
+    head = `<div class="armhead">${thumbHTML(sec.arm, L(UI.tap))}</div>`;
+  }
+  let h = `<section class="card" id="sec-${sec.id}"><h2>${title}</h2>`;
+  if(sec.s) h += `<p class="sub">${L(sec.s)}</p>`;
+  if(sec.script) h += `<div class="script">${L(sec.script)}</div>`;
+  h += head;
+  if(sec.compare) h += `<div class="cmpgrid">` + DRAFT.order.map((c,i)=>
+      thumbHTML(c, `<b>${fill(L(UI.msgShort),{p:i+1,l:ARM[c].letter})}</b>`)).join("") + `</div>`;
+  return h + sec.items.map(itemHTML).join("") + `</section>`;
+}
+function displaySections(){
+  const arms = DRAFT.order.map(c=>ARM_SECTIONS.find(s=>s.arm===c));
+  return [SEC_SESSION, SEC_BACKGROUND, SEC_PERCEPTION, SEC_ARMINTRO, ...arms, SEC_COMPARE, SEC_CLOSE];
+}
+window.imgMissing = function(img){
+  const d = document.createElement("div"); d.className = "missing";
+  d.textContent = L(UI.imgMissing) + " " + img.getAttribute("src");
+  img.replaceWith(d);
+};
+
+function render(){
+  document.documentElement.lang = LANG;
+  document.title = L(UI.title);
+  document.getElementById("appTitle").textContent = L(UI.title);
+  document.getElementById("introNote").innerHTML = L(UI.intro);
+  for(const [id,key] of [["saveBtn","save"],["newBtn","newI"],["moreBtn","more"],["sendBtn","send"],["testBtn","test"],
+                         ["exportBtn","exp"],["codebookBtn","cb"],["clearBtn","clear"],["langBtn","lang"],["vzoom","zoom"],["vclose","close"]])
+    document.getElementById(id).textContent = L(UI[key]);
+  const ord = DRAFT.order.map((c,i)=>`${i+1} → ${ARM[c].letter}`).join(", ");
+  document.getElementById("idBar").innerHTML =
+    `<span>${L(UI.idLabel)}: <b>${DRAFT.resp_id}</b></span><span>${L(UI.orderLabel)}: ${ord}</span>` +
+    `<span>${L(UI.startLabel)}: ${new Date(DRAFT.started_at).toLocaleTimeString(LANG==="id"?"id-ID":"en-GB",{hour:"2-digit",minute:"2-digit"})}</span>`;
+  let pos = 0;
+  form.innerHTML = displaySections().map(s=> sectionHTML(s, s.arm ? ++pos : 0)).join("");
+  writeVals(DRAFT.vals);
+  applyConditionals();
+  form.querySelectorAll("textarea").forEach(grow);
+  updateCount(); setStatus();
+}
+
+/* ---------- Reading and writing values ---------- */
+function readVals(){
+  const out = {};
+  for(const it of ALL_ITEMS){
+    const els = form.querySelectorAll(`[name="${it.id}"]`);
+    if(!els.length){ out[it.id] = ""; continue; }
+    if(it.type==="multi") out[it.id] = [...els].filter(e=>e.checked).map(e=>e.value).join("|");
+    else if(it.type==="radio" || it.type==="choice"){ const c = [...els].find(e=>e.checked); out[it.id] = c ? c.value : ""; }
+    else out[it.id] = els[0].value.trim();
+  }
+  return out;
+}
+function writeVals(vals){
+  for(const [k,v] of Object.entries(vals || {})){
+    form.querySelectorAll(`[name="${k}"]`).forEach(el=>{
+      if(el.type==="radio" || el.type==="checkbox") el.checked = String(v||"").split("|").includes(el.value);
+      else el.value = v ?? "";
+    });
+  }
+}
+
+/* ---------- Conditional items ---------- */
+function itemVisible(it, vals){
+  if(ITEM.CONSENT && vals.CONSENT === "tidak" && it.sec !== "S0") return false;
+  if(!it.showIf) return true;
+  const v = String(vals[it.showIf.field] || "").split("|");
+  return it.showIf.in.some(x=>v.includes(x));
+}
+function applyConditionals(){
+  const vals = readVals();
+  const refused = vals.CONSENT === "tidak";
+  for(const s of SECTIONS_CANON){
+    const node = document.getElementById("sec-" + s.id);
+    if(node && s.needConsent) node.hidden = refused;
+  }
+  for(const it of ALL_ITEMS){
+    if(!it.showIf) continue;
+    const node = document.getElementById("it-" + it.id);
+    if(!node) continue;
+    const show = itemVisible(it, vals);
+    node.hidden = !show;
+    if(!show) node.querySelectorAll("input,select,textarea").forEach(el=>{
+      if(el.type==="radio" || el.type==="checkbox") el.checked = false; else el.value = "";
+    });
+  }
+}
+
+/* ---------- Autosave ---------- */
+let saveTimer = null;
+function saveDraftSoon(){ clearTimeout(saveTimer); saveTimer = setTimeout(saveDraft, 300); }
+function saveDraft(){ DRAFT.vals = readVals(); lsSet(K.draft, DRAFT); }
+function grow(t){ t.style.height = "auto"; t.style.height = Math.min(t.scrollHeight + 2, 600) + "px"; }
+
+form.addEventListener("input", (e)=>{ if(e.target.tagName==="TEXTAREA") grow(e.target); saveDraftSoon(); });
+form.addEventListener("change", ()=>{ applyConditionals(); saveDraftSoon(); });
+window.addEventListener("pagehide", saveDraft);
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden") saveDraft(); });
+
+/* ---------- Picture viewer ---------- */
+const viewer = document.getElementById("viewer"), vimg = document.getElementById("vimg");
+form.addEventListener("click", (e)=>{
+  const b = e.target.closest(".thumb"); if(!b) return;
+  const code = b.dataset.arm, pos = DRAFT.order.indexOf(code) + 1;
+  vimg.src = ARM[code].img; vimg.className = "fit";
+  document.getElementById("vcap").textContent = fill(L(UI.msgShort),{p:pos,l:ARM[code].letter});
+  viewer.hidden = false; document.body.style.overflow = "hidden";
+});
+function closeViewer(){ viewer.hidden = true; document.body.style.overflow = ""; }
+document.getElementById("vclose").addEventListener("click", closeViewer);
+document.getElementById("vzoom").addEventListener("click", ()=>{ vimg.className = vimg.className==="fit" ? "full" : "fit"; });
+vimg.addEventListener("click", ()=>{ vimg.className = vimg.className==="fit" ? "full" : "fit"; });
+document.addEventListener("keydown", (e)=>{ if(e.key==="Escape" && !viewer.hidden) closeViewer(); });
+
+/* ---------- Sending ---------- */
+async function sendOne(rec){
+  if(!hasEndpoint()) return false;
+  const row = Object.assign({}, rec); delete row._sent;
+  const ctl = new AbortController(), t = setTimeout(()=>ctl.abort(), 45000);
+  try{
+    // text/plain avoids a CORS preflight, which Apps Script does not answer
+    const res = await fetch(CFG.endpoint, { method:"POST", signal:ctl.signal,
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({ key:CFG.key, columns:COLUMNS, row }) });
+    if(!res.ok) return false;
+    const out = await res.json().catch(()=>null);
+    return !!(out && out.ok);
+  }catch(e){ return false; }
+  finally{ clearTimeout(t); }
+}
+let flushing = false;
+async function flushQueue(){
+  if(!hasEndpoint() || flushing) return 0;
+  flushing = true; let sent = 0;
+  try{
+    for(const r of getRecs()){
+      if(r._sent) continue;
+      if(await sendOne(r)){
+        const all = getRecs(); const x = all.find(y=>y.resp_id===r.resp_id);
+        if(x){ x._sent = true; setRecs(all); } sent++;
+      } else break;                          // stop at the first failure; retry later
+    }
+  } finally { flushing = false; updateCount(); }
+  return sent;
+}
+const pendingCount = ()=> getRecs().filter(r=>!r._sent).length;
+
+/* ---------- Save & send ---------- */
+let busy = false;
+async function submit(){
+  if(busy) return;
+  const vals = readVals();
+  if(!vals.ENUM){ alert(L(UI.needEnum)); focusItem("ENUM"); return; }
+  if(!vals.LOKASI){ alert(L(UI.needLoc)); focusItem("LOKASI"); return; }
+  if(!vals.CONSENT){ alert(L(UI.needConsent)); focusItem("CONSENT"); return; }
+  const refused = vals.CONSENT === "tidak";
+  if(refused){
+    if(!confirm(L(UI.confirmRefusal))) return;
+    for(const it of ALL_ITEMS) if(it.sec !== "S0") vals[it.id] = "";
+  } else {
+    const bad = ALL_ITEMS.filter(it=>it.type==="number" && vals[it.id]!=="" &&
+      (isNaN(+vals[it.id]) || +vals[it.id] < it.min || +vals[it.id] > it.max)).map(it=>it.id);
+    if(bad.length){ alert(L(UI.badNum) + bad.map(showCode).join(", ")); focusItem(bad[0]); return; }
+    const blank = ALL_ITEMS.filter(it=>!it.opt && itemVisible(it, vals) && !vals[it.id]).map(it=>it.id);
+    if(blank.length){
+      const list = blank.slice(0,12).map(showCode).join(", ") + (blank.length>12 ? " …" : "");
+      if(!confirm(fill(L(UI.confirmBlank),{n:blank.length,l:list}))) return;
+    }
+  }
+  const now = new Date();
+  const rec = { resp_id:DRAFT.resp_id, form_version:FORM_VERSION, lang:LANG,
+    started_at:DRAFT.started_at, saved_at:now.toISOString(),
+    durasi_menit:(Math.round((now - new Date(DRAFT.started_at))/6000)/10).toString(),
+    arm_order:DRAFT.order.join("|"), _sent:false };
+  ARMS.forEach(a=>{ rec[a.code+"_POS"] = refused ? "" : String(DRAFT.order.indexOf(a.code)+1); });
+  Object.assign(rec, vals);
+  const all = getRecs(); const i = all.findIndex(r=>r.resp_id===rec.resp_id);
+  if(i >= 0) all[i] = rec; else all.push(rec);
+  if(!setRecs(all)){ alert("localStorage penuh / full — " + L(UI.exp)); return; }
+  const sess = {}; for(const k of PERSIST) sess[k] = vals[k]; lsSet(K.sess, sess);
+
+  busy = true; const btn = document.getElementById("saveBtn");
+  btn.disabled = true; btn.textContent = L(UI.sending);
+  let msg;
+  if(hasEndpoint()){ await flushQueue(); const q = pendingCount();
+    msg = q === 0 ? L(UI.sentOk) : fill(L(UI.sentQueued),{q}); }
+  else msg = L(UI.noEndpointSaved);
+  busy = false; btn.disabled = false;
+  alert(fill(L(UI.saved),{id:rec.resp_id}) + "\n" + msg);
+  DRAFT = freshDraft(); lsSet(K.draft, DRAFT); render(); window.scrollTo({top:0});
+}
+function focusItem(id){
+  const n = document.getElementById("it-"+id); if(!n) return;
+  n.scrollIntoView({behavior:"smooth", block:"center"});
+  const el = n.querySelector("input,select,textarea"); if(el) setTimeout(()=>el.focus({preventScroll:true}), 300);
+}
+
+/* ---------- Status ---------- */
+function updateCount(){
+  const n = getRecs().length, q = pendingCount();
+  document.getElementById("countPill").textContent = fill(L(UI.pill),{n,q});
+  document.getElementById("sendBtn").disabled = q === 0 || !hasEndpoint();
+}
+function setStatus(msg){
+  const el = document.getElementById("status");
+  el.className = "status" + (hasEndpoint() && !msg ? " ok" : "");
+  el.textContent = msg || (hasEndpoint() ? L(UI.endpointOk) : L(UI.noEndpoint));
+}
+
+/* ---------- CSV ---------- */
+function csv(cols, rows){
+  const esc = (s)=>{ s = (s ?? "").toString(); return /[",\n\r;]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s; };
+  return "﻿" + [cols.join(",")].concat(rows.map(r=>cols.map(c=>esc(r[c])).join(","))).join("\r\n") + "\r\n";
+}
+function download(name, text){
+  const b = new Blob([text], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+}
+function codebookRows(){
+  const secName = Object.fromEntries(SECTIONS_CANON.map(s=>[s.id, s.t ? s.t.id : ""]));
+  const rows = META.map(c=>({ kolom:c, bagian:"meta", pertanyaan_id:"", question_en:"", jenis:"otomatis", pilihan:"", diisi_oleh:"sistem", syarat:"" }));
+  for(const it of ALL_ITEMS){
+    const arm = it.id.split("_")[0];
+    let bag = secName[it.sec] || (ARM[arm] ? "Bagian 3. Pesan kode " + ARM[arm].letter + " (" + ARM[arm].name.id + ")" : it.sec);
+    let pil = "";
+    if(it.scale){ const s = S[it.scale]; pil = `${s.from}..${s.from+s.n-1}; ${s.lo.id} | ${s.hi.id}`; }
+    else if(it.arms) pil = ARMS.map(a=>`${a.code}=${a.letter} ${a.name.id}`).join("; ");
+    else if(it.opts) pil = it.opts.map(x=>`${x.v}=${x.id}`).join("; ");
+    else if(it.type==="number") pil = `${it.min}..${it.max}`;
+    rows.push({ kolom:it.id, bagian:bag, pertanyaan_id:it.q.id, question_en:it.q.en,
+      jenis:it.type + (it.type==="multi" ? " (dipisah |)" : ""), pilihan:pil,
+      diisi_oleh: it.coder ? "pewawancara" : "responden",
+      syarat: it.showIf ? `${it.showIf.field} in (${it.showIf.in.join(",")})` : (it.opt ? "boleh kosong" : "") });
+  }
+  return rows;
+}
+
+/* ---------- Buttons ---------- */
+document.getElementById("saveBtn").addEventListener("click", submit);
+document.getElementById("newBtn").addEventListener("click", ()=>{
+  menu.hidden = true;
+  const v = readVals();
+  const has = ALL_ITEMS.some(it=>!it.persist && v[it.id]);
+  if(has && !confirm(L(UI.confirmNew))) return;
+  DRAFT = freshDraft(); lsSet(K.draft, DRAFT); render(); window.scrollTo({top:0});
+});
+const menu = document.getElementById("menu");
+document.getElementById("moreBtn").addEventListener("click", (e)=>{ e.stopPropagation(); menu.hidden = !menu.hidden; });
+document.addEventListener("click", (e)=>{ if(!menu.hidden && !menu.contains(e.target)) menu.hidden = true; });
+document.getElementById("sendBtn").addEventListener("click", async ()=>{
+  menu.hidden = true;
+  if(pendingCount() === 0){ alert(L(UI.sendNone)); return; }
+  const n = await flushQueue(); const q = pendingCount();
+  alert(q === 0 ? L(UI.sentOk) : (n > 0 ? fill(L(UI.sentQueued),{q}) : L(UI.sendFail)));
+});
+document.getElementById("testBtn").addEventListener("click", async ()=>{
+  menu.hidden = true;
+  if(!hasEndpoint()){ alert(L(UI.noEndpoint)); return; }
+  try{
+    const r = await fetch(CFG.endpoint + (CFG.endpoint.includes("?") ? "&" : "?") + "action=ping", {cache:"no-store"});
+    const j = await r.json();
+    alert(j.ok ? fill(L(UI.testOk),{n:j.baris_terisi}) : fill(L(UI.testFail),{e:j.error || r.status}));
+  }catch(e){ alert(fill(L(UI.testFail),{e:e.message || e})); }
+});
+document.getElementById("exportBtn").addEventListener("click", ()=>{
+  menu.hidden = true; const all = getRecs();
+  if(!all.length){ alert(L(UI.nothing)); return; }
+  download("wawancara_bukan_pegawai_" + new Date().toISOString().slice(0,10) + ".csv",
+           csv([...COLUMNS, "_sent"], all.map(r=>Object.assign({}, r, {_sent: r._sent ? "1" : "0"}))));
+});
+document.getElementById("codebookBtn").addEventListener("click", ()=>{
+  menu.hidden = true;
+  download("kodebuku_wawancara_bukan_pegawai.csv",
+           csv(["kolom","bagian","pertanyaan_id","question_en","jenis","pilihan","diisi_oleh","syarat"], codebookRows()));
+});
+document.getElementById("clearBtn").addEventListener("click", ()=>{
+  menu.hidden = true; const all = getRecs(), sent = all.filter(r=>r._sent).length;
+  if(!sent){ alert(L(UI.sendNone)); return; }
+  if(!confirm(fill(L(UI.confirmClear),{n:sent}))) return;
+  setRecs(all.filter(r=>!r._sent)); updateCount();
+});
+document.getElementById("langBtn").addEventListener("click", ()=>{
+  saveDraft(); LANG = LANG === "id" ? "en" : "id"; lsSet(K.lang, LANG); render();
+});
+
+/* ---------- Start ---------- */
+render();
+lsSet(K.draft, DRAFT);
+if(hasEndpoint()) flushQueue();
+window.addEventListener("online", ()=>flushQueue());
+setInterval(()=>{ if(pendingCount() > 0) flushQueue(); }, 60000);
+if("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")){
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
+</script>
+</body>
+</html>
